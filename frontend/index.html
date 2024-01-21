@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Management</title>
+</head>
+<body>
+
+<div id="app">
+    <h1>Book Management</h1>
+
+    <!-- Registration Form -->
+    <div>
+        <h2>Register</h2>
+        <form @submit.prevent="register">
+            <label for="registerName">Name:</label>
+            <input type="text" id="registerName" v-model="registerForm.name" required>
+
+            <label for="registerUsername">Username:</label>
+            <input type="text" id="registerUsername" v-model="registerForm.username" required>
+
+            <label for="registerPassword">Password:</label>
+            <input type="password" id="registerPassword" v-model="registerForm.password" required>
+
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <!-- Login Form -->
+    <div>
+        <h2>Login</h2>
+        <form @submit.prevent="login">
+            <label for="username">Username:</label>
+            <input type="text" id="username" v-model="loginForm.username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" v-model="loginForm.password" required>
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <!-- Book Form -->
+    <h2>Add/Update Book</h2>
+    <form @submit.prevent="saveBook">
+        <label for="bookName">Book Name:</label>
+        <input type="text" id="bookName" v-model="bookForm.name" required>
+
+        <button type="submit">{{ isEditing ? 'Update Book' : 'Add Book' }}</button>
+    </form>
+
+    <!-- Book List -->
+    <h2>Book List</h2>
+    <ul>
+        <li v-for="book in books" :key="book.id">
+            {{ book.name }}
+            <button @click="editBook(book)">Edit</button>
+            <button @click="deleteBook(book.id)">Delete</button>
+        </li>
+    </ul>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+new Vue({
+    el: '#app',
+    data: {
+        isLoggedIn: false,
+        currentUser: {},
+        loginForm: {
+            username: '',
+            password: ''
+        },
+        registerForm: {
+            name: '',
+            username: '',
+            password: ''
+        },
+        bookForm: {
+            name: ''
+        },
+        books: [],
+        isEditing: false,
+        editingBookId: null
+    },
+    created() {
+        this.fetchBooks();
+    },
+    methods: {
+        login() {
+            axios.post('/login', this.loginForm)
+                .then(response => {
+                    this.isLoggedIn = true;
+                    this.currentUser = response.data.user;
+                    this.fetchBooks();
+                })
+                .catch(error => {
+                    console.error(error.response.data.message);
+                });
+        },
+        register() {
+            axios.post('/register', this.registerForm)
+                .then(response => {
+                    console.log(response.data.message);  // Registration successful
+                    // Optionally, you can clear the registration form fields here
+                })
+                .catch(error => {
+                    console.error(error.response.data.message);
+                });
+        },
+        logout() {
+            axios.post('/logout')
+                .then(() => {
+                    this.isLoggedIn = false;
+                    this.currentUser = {};
+                    this.loginForm.username = '';
+                    this.loginForm.password = '';
+                    this.books = [];
+                })
+                .catch(error => {
+                    console.error(error.response.data.message);
+                });
+        },
+        fetchBooks() {
+            axios.get('/books')
+                .then(response => {
+                    this.books = response.data;
+                })
+                .catch(error => {
+                    console.error(error.response.data.message);
+                });
+        },
+        saveBook() {
+            if (this.isEditing) {
+                this.updateBook();
+            } else {
+                this.addBook();
+            }
+        },
+        addBook() {
+            axios.post('/books', this.bookForm)
+                .then(response => {
+                    this.books.push(response.data.book);
+                    this.bookForm.name = '';
+                })
+                .catch(error => {
+                    console.error(error.response.data.message);
+                });
+        },
+        editBook(book) {
+            this.isEditing = true;
+            this.editingBookId = book.id;
+            this.bookForm.name = book.name;
+        },
+        updateBook() {
+            axios.put(`/books/${this.editingBookId}`, this.bookForm)
+                .then(response => {
+                    const updatedBookIndex = this.books.findIndex(book => book.id === this.editingBookId);
+                    this.$set(this.books, updatedBookIndex, response.data.book);
+                    this.isEditing = false;
+                    this.editingBookId = null;
+                    this.bookForm.name = '';
+                })
+                .catch(error => {
+                    console.error(error.response.data.message);
+                });
+        },
+        deleteBook(bookId) {
+            axios.delete(`/books/${bookId}`)
+                .then(() => {
+                    this.books = this.books.filter(book => book.id !== bookId);
+                })
+                .catch(error => {
+                    console.error(error.response.data.message);
+                });
+        }
+    }
+});
+</script>
+
+</body>
+</html>
