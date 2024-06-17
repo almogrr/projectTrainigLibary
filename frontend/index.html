@@ -1,0 +1,1042 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #customer_view {
+            background-color: #96cfdc;
+        }
+        #admin_view {
+            background-color: #96cfdc;
+        }
+        label {
+            font-size: 18px;
+        }
+
+        h1, h2 {
+            font-weight: bold; /* Bold font weight */
+            text-decoration: underline; /* Underline text */
+        }
+
+        h1 {
+            font-size: 32px; /* Increase h1 text size */
+        }
+
+        h2 {
+            font-size: 28px; /* Increase h2 text size */
+        }
+
+        /* Common table styles */
+        .book-table, .user-table, .loan-table, .late-loans-table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .book-table th, .user-table th, .loan-table th, .late-loans-table th {
+            background-color: #343a40; /* Dark gray header background */
+            color: white;
+            font-size: 18px; /* Increase header text size */
+            padding: 10px;
+            text-align: left;
+        }
+
+        .book-table td, .user-table td, .loan-table td, .late-loans-table td {
+            background-color: #f8f9fa; /* Light gray cell background */
+            font-size: 16px; /* Increase cell text size */
+            padding: 10px;
+            text-align: left;
+        }
+
+        /* Book item */
+        .book-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            background-color: #fff; /* White background for book items */
+        }
+
+        .book-item img {
+            max-width: 100px;
+            margin-right: 10px;
+        }
+
+        /* Button colors */
+        .btn-primary {
+            background-color: #007bff; /* Blue button background */
+            border-color: #007bff;
+            font-size: 16px; /* Increase button text size */
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        .btn-success {
+            background-color: #28a745; /* Green button background */
+            border-color: #28a745;
+            font-size: 16px; /* Increase button text size */
+        }
+
+        .btn-success:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+
+        .btn-danger {
+            background-color: #dc3545; /* Red button background */
+            border-color: #dc3545;
+            font-size: 16px; /* Increase button text size */
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+
+        /* Logout button */
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #dc3545; /* Red button background */
+            border-color: #dc3545;
+            color: white;
+            font-size: 20px; /* Increase button text size */
+            padding: 10px 20px;
+        }
+
+        .logout-btn:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+
+        .btn-purple {
+        color: #fff;
+        background-color: #6f42c1; /* Purple color */
+        border-color: #6f42c1; /* Purple color */
+    }
+    .btn-purple:hover {
+        background-color: #8250c4; /* Darker purple color on hover */
+        border-color: #8250c4; /* Darker purple color on hover */
+    }
+    .btn-orange {
+        color: #fff;
+        background-color: #ff7f0e; /* Default orange color */
+        border-color: #ff7f0e; /* Default orange color */
+    }
+
+    .btn-orange:hover {
+        background-color: #e65c00; /* Darker orange color on hover */
+        border-color: #e65c00; /* Darker orange color on hover */
+    }
+
+    .btn-yellow {
+        color: #fff;
+        background-color: #ffc107; /* Default yellow color */
+        border-color: #ffc107; /* Default yellow color */
+    }
+
+    .btn-yellow:hover {
+        background-color: #e6a100; /* Darker yellow color on hover */
+        border-color: #e6a100; /* Darker yellow color on hover */
+    }
+    </style>
+
+</head>
+
+<body>
+
+    <body class="bg-light">
+
+        <div id="login_view" class="form-container">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username:</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+    
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password:</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+    
+                <button type="button" class="btn btn-primary" onclick="login()">Login</button>
+            </form>
+    
+            <h2>Register</h2>
+            <form id="registerForm" class="form-container">
+                <div class="mb-3">
+                    <label for="regName" class="form-label">Name:</label>
+                    <input type="text" class="form-control" id="regName" name="regName" required>
+                </div>
+    
+                <div class="mb-3">
+                    <label for="regCity" class="form-label">City:</label>
+                    <input type="text" class="form-control" id="regCity" name="regCity" required>
+                </div>
+    
+                <div class="mb-3">
+                    <label for="regAge" class="form-label">Age:</label>
+                    <input type="text" class="form-control" id="regAge" name="regAge">
+                </div>
+    
+                <div class="mb-3">
+                    <label for="regUsername" class="form-label">Username:</label>
+                    <input type="text" class="form-control" id="regUsername" name="regUsername" required>
+                </div>
+    
+                <div class="mb-3">
+                    <label for="regPassword" class="form-label">Password:</label>
+                    <input type="password" class="form-control" id="regPassword" name="regPassword" required>
+                </div>
+    
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="regAdmin" name="regAdmin">
+                    <label class="form-check-label" for="regAdmin">Admin</label>
+                </div>
+    
+                <button type="button" class="btn btn-success" onclick="register()">Register</button>
+            </form>
+        </div>
+    
+<body class="bg-light">
+
+
+    <div id="customer_view">
+        <button class="logout-btn" onclick="logout()">Logout</button>
+        <div id="books" class="container">
+            <h2>Books</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered book-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Author</th>
+                        <th>Year Published</th>
+                        <th>Type</th>
+                        <th>Loaned by Customer(ID)</th>
+                        <th>Image</th>
+                    </tr>
+                    </thead>
+                    <tbody id="bookList">
+                    <!-- Book items will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    
+        <!-- Users table -->
+        <div id="users" class="container">
+            <h2>Users</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered user-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>City</th>
+                        <th>Age</th>
+                        <th>Username</th>
+                    </tr>
+                    </thead>
+                    <tbody id="userList">
+                    <!-- User items will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    
+        <!-- Loans table -->
+        <div id="loans" class="container">
+            <h2>Loans</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered loan-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Book ID</th>
+                        <th>Customer ID</th>
+                        <th>Loan Date</th>
+                        <th>Return Date</th>
+                        <th>Expected Return Date</th>
+                    </tr>
+                    </thead>
+                    <tbody id="loanList">
+                    <!-- Loan items will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    
+        <!-- Late Loans table -->
+        <div id="late-loans" class="container">
+            <h2>Late Returns</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered late-loans-table">
+                    <thead>
+                    <tr>
+                        <th>Loan ID</th>
+                        <th>Book Name</th>
+                        <th>Customer ID</th>
+                        <th>Loan Date</th>
+                        <th>Expected Return Date</th>
+                    </tr>
+                    </thead>
+                    <tbody id="lateLoansList">
+                    <!-- Late loan items will be dynamically inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    
+
+    <br>
+    <h2>User Search</h2>
+    <form id="userSearchForm">
+        <label for="user_Name">Enter User Name:</label>
+        <input type="text" id="user_Name" name="user_Name" required>
+        <button type="submit" class="btn btn-purple">Search user</button>
+    </form><br>
+
+    <div id="userDetails"></div>
+    <h2>Loan a Book</h2>
+    <form id="loanForm">
+        <label for="bookId">Book ID:</label>
+        <input type="text" id="bookId" name="bookId">
+        <button type="button" class="btn btn-yellow" onclick="loanBook()">Loan Book</button>
+    </form><br>
+    
+
+<!-- Form to return a book -->
+<h2>Return a Book</h2>
+<form id="returnForm">
+    <label for="returnbookid">Book ID:</label>
+    <input type="text" id="returnbookid" name="returnbookid">
+    <button type="button" class="btn btn-primary" onclick="returnBook()">Return Book</button>
+</form>
+<br>
+<h2>Find Book</h2>
+<label for="book_name">Enter Book Name:</label>
+<input type="text" id="book_name" name="book_name">
+<button type="button" onclick="findBook()" class="btn btn-purple">Find Book</button><br><br>
+</div>
+
+
+<div id="admin_view">
+
+
+
+    <div id="bookDetails"></div>
+        <!-- Add Book Form -->
+        <h2>Add Book</h2>
+        <form id="addBookForm" enctype="multipart/form-data">
+            <label for="bookName">Book Name:</label>
+            <input type="text" id="bookName" name="bookName" required><br>
+
+            <label for="bookAuthor">Author:</label>
+            <input type="text" id="bookAuthor" name="bookAuthor" required><br>
+
+            <label for="yearPublished">Year Published:</label>
+            <input type="text" id="yearPublished" name="yearPublished" required><br>
+
+            <label for="bookType">Book Type:</label>
+            <select id="bookType" name="bookType" required>
+                <option value="1">Type 1</option>
+                <option value="2">Type 2</option>
+                <option value="3">Type 3</option>
+            </select><br>
+
+            <label for="bookImage">Book Image:</label>
+            <input type="file" id="bookImage" name="image" accept="image/*"><br>
+            <img id="previewImage" src="" alt="Book Image" style="max-width: 300px; display: none;">
+            <button  type="button" class="btn btn-success" onclick="addBook()">Add Book</button>
+        </form>
+        <br>
+        <!-- Update Book Form -->
+        <h2>Update Book</h2>
+<form id="updateBookForm" enctype="multipart/form-data">
+
+    <label for="updateBookId">what Book to update? (id):</label>
+    <input type="text" id="updateBookId" name="updateBookId" value=""><br>
+
+    <label for="updateBookName">New Book Name:</label>
+    <input type="text" id="updateBookName" name="updateBookName" required><br>
+
+    <label for="updateBookAuthor">New Author:</label>
+    <input type="text" id="updateBookAuthor" name="updateBookAuthor" required><br>
+
+    <label for="updateYearPublished">New Year Published:</label>
+    <input type="text" id="updateYearPublished" name="updateYearPublished" required><br>
+
+    <label for="updateBookType">New Book Type:</label>
+    <select id="updateBookType" name="updateBookType" required>
+        <option value="1">Type 1</option>
+        <option value="2">Type 2</option>
+        <option value="3">Type 3</option>
+    </select><br>
+
+    <label for="updateBookImage">New Book Image:</label>
+    <input type="file" id="updateBookImage" name="updateBookImage" accept="image/*"><br>
+
+    <button type="button" class="btn btn-orange" onclick="updateBook()">Update Book</button>
+</form>
+<br>
+        
+
+        <!-- Delete Book Form -->
+        <h2>Delete Book</h2>
+        <form id="deleteBookForm">
+            <label for="deleteBookId">Book ID:</label>
+            <input type="text" id="deleteBookId" name="deleteBookId" required>
+            <button type="button" class="btn btn-danger" onclick="deleteBook()">Delete Book</button>
+        </form>
+        <br>
+        <h2>Delete User</h2>
+        <form id="deleteUserForm">
+            <label for="deleteUserId">User ID:</label>
+            <input type="text" id="deleteUserId" name="deleteUserId" required>
+            <button type="button" class="btn btn-danger" onclick="deleteUser()">Delete User</button>
+        </form>
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <script>
+        const apiUrl = 'http://localhost:5000';
+
+    document.addEventListener('DOMContentLoaded', function() {
+    const token = localStorage.getItem('token');
+    const isAdmin = localStorage.getItem('isAdmin');
+
+    if (token) { // checks if the token is in local storage
+        if (isAdmin === "true") { //check if the string sended is true
+            document.getElementById('login_view').style.display = 'none';
+            document.getElementById('admin_view').style.display = 'block';
+            document.getElementById('customer_view').style.display = 'block';
+        } else {
+            document.getElementById('login_view').style.display = 'none';
+            document.getElementById('admin_view').style.display = 'none';
+            document.getElementById('customer_view').style.display = 'block';
+        }
+    } else {
+        document.getElementById('login_view').style.display = 'block';
+        document.getElementById('admin_view').style.display = 'none';
+        document.getElementById('customer_view').style.display = 'none';
+    }
+});
+
+
+
+
+function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    fetch(`${apiUrl}/login`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.token) {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('isAdmin', data.is_admin);
+            // Reload the page
+            location.reload();
+        } else {
+            alert('Invalid credentials');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function register() {
+    const regName = document.getElementById('regName').value;
+    const regCity = document.getElementById('regCity').value;
+    const regAge = document.getElementById('regAge').value;
+    const regUsername = document.getElementById('regUsername').value;
+    const regPassword = document.getElementById('regPassword').value;
+    const regAdmin = document.getElementById('regAdmin').checked; // Get admin checkbox value
+
+    fetch(`${apiUrl}/register`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: regName, city: regCity, age: regAge, username: regUsername, password: regPassword, is_admin: regAdmin })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.token) {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('isAdmin', data.is_admin);
+            // Reload the page
+            location.reload();
+        } else {
+            alert('Registration failed');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+
+
+
+
+        document.getElementById('bookImage').addEventListener('change', function () {
+            const fileInput = this;
+            const previewImage = document.getElementById('previewImage');
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                };
+                
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        });
+
+        function loadBooks() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                fetch(`${apiUrl}/books`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Unauthorized');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const bookListContainer = document.getElementById('bookList');
+                    bookListContainer.innerHTML = '';
+
+                        data.books.forEach(book => {
+                            const row = document.createElement('tr');
+
+                            const idCell = document.createElement('td');
+                            idCell.textContent = book.id;
+                            row.appendChild(idCell);
+
+                            const nameCell = document.createElement('td');
+                            nameCell.textContent = book.name;
+                            row.appendChild(nameCell);
+
+                            const authorCell = document.createElement('td');
+                            authorCell.textContent = book.author;
+                            row.appendChild(authorCell);
+
+                            const yearCell = document.createElement('td');
+                            yearCell.textContent = book.year_published;
+                            row.appendChild(yearCell);
+
+                            const typeCell = document.createElement('td');
+                            typeCell.textContent = book.book_type;
+                            row.appendChild(typeCell);
+
+                            const customerIdCell = document.createElement('td');
+                            customerIdCell.textContent = book.customer_id;
+                            row.appendChild(customerIdCell);
+
+                            const imageCell = document.createElement('td');
+                            const img = document.createElement('img');
+                            img.src = `${apiUrl}/${book.image}`;
+                            img.alt = 'Book Image';
+                            img.style.maxWidth = '100px';
+                            imageCell.appendChild(img);
+                            row.appendChild(imageCell);
+                            bookListContainer.appendChild(row);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const token = localStorage.getItem('token');
+            if (token) {
+                loadBooks();
+            }
+        });
+
+        function loadUsers() {
+    const token = localStorage.getItem('token');
+    if (token) {
+        fetch(`${apiUrl}/users`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch users');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const userListContainer = document.getElementById('userList');
+            userListContainer.innerHTML = '';
+
+            data.users.forEach(user => {
+                const row = document.createElement('tr');
+
+                const idCell = document.createElement('td');
+                idCell.textContent = user.id;
+                row.appendChild(idCell);
+
+                const nameCell = document.createElement('td');
+                nameCell.textContent = user.name;
+                row.appendChild(nameCell);
+
+                const cityCell = document.createElement('td');
+                cityCell.textContent = user.city;
+                row.appendChild(cityCell);
+
+                const ageCell = document.createElement('td');
+                ageCell.textContent = user.age;
+                row.appendChild(ageCell);
+
+                const usernameCell = document.createElement('td');
+                usernameCell.textContent = user.username;
+                row.appendChild(usernameCell);
+
+                userListContainer.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching users:', error);
+        });
+    }
+}
+document.addEventListener('DOMContentLoaded', function () {
+    loadUsers();
+});
+
+function loadLoans() {
+    const token = localStorage.getItem('token');
+    if (token) {
+        fetch(`${apiUrl}/loans`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch loans');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const loanListContainer = document.getElementById('loanList');
+                loanListContainer.innerHTML = '';
+
+                data.loans.forEach(loanInfo => {
+                    const row = document.createElement('tr');
+
+                    const idCell = document.createElement('td');
+                    idCell.textContent = loanInfo.id;
+                    row.appendChild(idCell);
+
+                    const bookIdCell = document.createElement('td');
+                    bookIdCell.textContent = loanInfo.book_id;
+                    row.appendChild(bookIdCell);
+
+                    const customerIdCell = document.createElement('td');
+                    customerIdCell.textContent = loanInfo.customer_id;
+                    row.appendChild(customerIdCell);
+
+                    const loanDateCell = document.createElement('td');
+                    loanDateCell.textContent = loanInfo.loan_date;
+                    row.appendChild(loanDateCell);
+
+                    const returnDateCell = document.createElement('td');
+                    returnDateCell.textContent = loanInfo.return_date;
+                    row.appendChild(returnDateCell);
+
+                    const expectedReturnDateCell = document.createElement('td');
+                    expectedReturnDateCell.textContent = loanInfo.expected_return_date;
+                    row.appendChild(expectedReturnDateCell);
+
+                    loanListContainer.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+}
+
+// Call loadLoans function when the page loads
+window.addEventListener('load', loadLoans);
+
+
+// Function to format date in 'YYYY-MM-DD' format
+function formatDate(dateString) {
+    const dateObj = new Date(dateString);
+    const year = dateObj.getFullYear();
+    const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+    const day = ('0' + dateObj.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+}
+
+// Call loadLoans function when the page loads
+window.addEventListener('load', loadLoans);
+
+
+// Function to load late returns
+function loadLateReturns() {
+    const token = localStorage.getItem('token');
+    if (token) {
+        fetch(`${apiUrl}/books/return`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch late returns');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const lateLoansListContainer = document.getElementById('lateLoansList');
+            lateLoansListContainer.innerHTML = '';
+
+            data.late_returns.forEach(returnInfo => {
+                const row = document.createElement('tr');
+
+                const loanIdCell = document.createElement('td');
+                loanIdCell.textContent = returnInfo.id;
+                row.appendChild(loanIdCell);
+
+                const bookNameCell = document.createElement('td');
+                bookNameCell.textContent = returnInfo.book_name;
+                row.appendChild(bookNameCell);
+
+                const customerIdCell = document.createElement('td');
+                customerIdCell.textContent = returnInfo.customer_id;
+                row.appendChild(customerIdCell);
+
+                const loanDateCell = document.createElement('td');
+                loanDateCell.textContent = returnInfo.loan_date;
+                row.appendChild(loanDateCell);
+
+                const expectedReturnDateCell = document.createElement('td');
+                expectedReturnDateCell.textContent = returnInfo.expected_return_date;
+                row.appendChild(expectedReturnDateCell);
+
+                lateLoansListContainer.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+}
+
+// Load current loans and late returns when the page is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    loadLoans();
+    loadLateReturns();
+});
+
+
+
+
+
+        function addBook() {
+    const token = localStorage.getItem('token');
+    const bookName = document.getElementById('bookName').value;
+    const bookAuthor = document.getElementById('bookAuthor').value;
+    const yearPublished = document.getElementById('yearPublished').value;
+    const bookType = document.getElementById('bookType').value;
+    const bookImage = document.getElementById('bookImage').files[0];
+
+    const formData = new FormData();
+    formData.append('name', bookName);
+    formData.append('author', bookAuthor);
+    formData.append('year_published', yearPublished);
+    formData.append('book_type', bookType);
+    formData.append('image', bookImage);
+
+    fetch(`${apiUrl}/books`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'Book added successfully') {
+
+            } else {
+                alert('Failed to add book');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function updateBook() {
+    const token = localStorage.getItem('token');
+    const updateBookId = document.getElementById('updateBookId').value;
+    const updateBookName = document.getElementById('updateBookName').value;
+    const updateBookAuthor = document.getElementById('updateBookAuthor').value;
+    const updateYearPublished = document.getElementById('updateYearPublished').value;
+    const updateBookType = document.getElementById('updateBookType').value;
+    const updateBookImage = document.getElementById('updateBookImage').files[0];
+
+    const formData = new FormData();
+    formData.append('name', updateBookName);
+    formData.append('author', updateBookAuthor);
+    formData.append('year_published', updateYearPublished);
+    formData.append('book_type', updateBookType);
+
+    if (updateBookImage) {
+        formData.append('image', updateBookImage);
+    }
+
+    fetch(`${apiUrl}/books/${updateBookId}`, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        },
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'Book updated successfully') {
+                alert('Book updated successfully');
+                // Update the displayed book
+                const updatedRow = document.getElementById(`book-${updateBookId}`);
+                updatedRow.cells[1].textContent = updateBookName;
+                updatedRow.cells[2].textContent = updateBookAuthor;
+                updatedRow.cells[3].textContent = updateYearPublished;
+                updatedRow.cells[4].textContent = updateBookType;
+                if (updateBookImage) {
+                    const img = updatedRow.cells[6].querySelector('img');
+                    img.src = URL.createObjectURL(updateBookImage);
+                }
+            } else {
+                alert('Failed to update book');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+
+function deleteBook() {
+    const token = localStorage.getItem('token');
+    const deleteBookId = document.getElementById('deleteBookId').value;
+
+    fetch(`${apiUrl}/books/${deleteBookId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message === 'Book deleted successfully') {
+                alert('book deleted successfully')
+            } else {
+                alert('Failed to delete book');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function deleteUser() {
+    const token = localStorage.getItem('token');
+    const deleteUserId = document.getElementById('deleteUserId').value;
+
+    fetch(`${apiUrl}/users/${deleteUserId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message === 'User deleted successfully') {
+            alert('User deleted successfully');
+        } else {
+            alert('Failed to delete user');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('isAdmin'); 
+    document.getElementById('login_view').style.display = 'block';
+    document.getElementById('admin_view').style.display = 'none';
+    document.getElementById('customer_view').style.display = 'none';
+}
+
+
+
+
+
+
+
+        function loanBook() {
+    const token = localStorage.getItem('token');
+    const bookId = document.getElementById('bookId').value;
+    if (token && bookId) {
+        fetch(`${apiUrl}/books/${bookId}/loan`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            } 
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to loan book');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Book loaned successfully:', data.message);
+            alert('Book loaned successfully');
+        })
+        .catch(error => {
+            console.error('Error loaning book:', error);
+            alert(error.message);
+        });
+    } else {
+        console.error('Token or Book ID not found.');
+        alert("failed to loan book");
+    }
+}
+
+
+function returnBook() {
+    const token = localStorage.getItem('token');
+    const returnbookid = document.getElementById('returnbookid').value;
+    if (token && returnbookid) {
+        fetch(`${apiUrl}/books/${returnbookid}/return`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            } 
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to return book');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Book returned successfully:', data.message);
+            alert('Book returned successfully');
+        })
+        .catch(error => {
+            console.error('Error returning book:', error);
+            alert(error.message);
+        });
+    } else {
+        console.error('Token or Book ID not found.');
+    }
+}
+
+
+
+        function findBook() {
+            const bookName = document.getElementById('book_name').value;
+
+            fetch(`${apiUrl}/books/find?name=${bookName}`)
+                 .then(response => {
+                     if (!response.ok) {
+                         throw new Error('Book not found');
+                     }
+                    return response.json();
+                })
+                .then(data => {
+                    const bookDetails = document.getElementById('bookDetails');
+                    bookDetails.innerHTML = `
+                        <h2>Book Details</h2>
+                        <p><strong>ID:</strong> ${data.id}</p>
+                        <p><strong>Name:</strong> ${data.name}</p>
+                        <p><strong>Author:</strong> ${data.author}</p>
+                        <p><strong>Year Published:</strong> ${data.year_published}</p>
+                        <p><strong>Type:</strong> ${data.book_type}</p>
+                        <img src="${apiUrl}/${data.image_path}" alt="Book Image" style="max-width: 100px;">
+                    `;
+                })
+                .catch(error => {
+                    const bookDetails = document.getElementById('bookDetails');
+                    bookDetails.innerHTML = `<p>Error: ${error.message}</p>`;
+                });
+        }
+
+        
+        function findUser() {
+            const userName = document.getElementById('user_Name').value;
+
+            fetch(`${apiUrl}/users/find?name=${userName}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('User not found');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const userDetails = document.getElementById('userDetails');
+                    userDetails.innerHTML = `
+                        <h2>User Details</h2>
+                        <p><strong>ID:</strong> ${data.id}</p>
+                        <p><strong>Name:</strong> ${data.name}</p>
+                        <p><strong>City:</strong> ${data.city}</p>
+                        <p><strong>Age:</strong> ${data.age}</p>
+                        <p><strong>Username:</strong> ${data.username}</p>
+                    `;
+                })
+                .catch(error => {
+                    const userDetails = document.getElementById('userDetails');
+                    userDetails.innerHTML = `<p>Error: ${error.message}</p>`;
+                });
+        }
+
+        document.getElementById('userSearchForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            findUser();
+        });
+
+
+
+
+    </script>
+
+</body>
+
+</html>
